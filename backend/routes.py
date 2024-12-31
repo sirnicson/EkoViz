@@ -1,7 +1,7 @@
 from flask import request
 import os
 import zipfile
-import csv
+from gtfs_parser import parse_gtfs_files, store_gtfs_data_in_db  # Import the functions from gtfs_parser.py
 
 ALLOWED_EXTENSIONS = {'zip'}
 REQUIRED_GTFS_FILES = ['agency.txt', 'routes.txt', 'trips.txt', 'stops.txt', 'stop_times.txt', 'calendar.txt']
@@ -52,19 +52,17 @@ def upload_file(app):
             if validation_error:
                 return validation_error
 
-            # Step 3: Parse the required GTFS files (we'll just check CSV headers for now)
-            gtfs_files = {filename: os.path.join(extracted_folder, filename) for filename in REQUIRED_GTFS_FILES}
-            for filename, filepath in gtfs_files.items():
-                if not os.path.exists(filepath):
-                    return f"GTFS file {filename} is missing or corrupted."
+            # Step 3: Parse the GTFS files and get the data
+            try:
+                gtfs_data = parse_gtfs_files(extracted_folder)
 
-                with open(filepath, 'r', encoding='utf-8') as file:
-                    reader = csv.reader(file)
-                    headers = next(reader, None)  # Read the header row
-                    if not headers:
-                        return f"GTFS file {filename} is empty or malformed."
+                # Step 4: Store the parsed data in the database
+                store_gtfs_data_in_db(gtfs_data)
 
-            return f"GTFS file validated and uploaded successfully."
+                return f"GTFS data validated, parsed, and uploaded successfully."
+
+            except Exception as e:
+                return f"Error occurred: {e}"
 
     return '''
         <!doctype html>

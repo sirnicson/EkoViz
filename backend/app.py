@@ -1,5 +1,6 @@
 from flask import Flask
-from routes import upload_file  # Import the route handler from routes.py
+from routes import upload_file
+import mysql.connector
 
 app = Flask(__name__)
 
