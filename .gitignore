@@ -1,0 +1,37 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+env/
+venv/
+*.egg-info/
+dist/
+build/
+*.log
+
+# Flask
+instance/
+*.sqlite
+
+# MySQL
+*.sql
+*.db
+
+# Node.js (if you're using it for frontend dependencies)
+node_modules/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Miscellaneous
+*.env
+*.bak
+*.swp
